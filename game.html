@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Yes or No</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+      font-family: Arial, sans-serif;
+      background-color: lightpink;
+    }
+
+    h1 {
+      text-align: center;
+      margin-top: 60px;
+    }
+
+    .yes-btn, .no-btn {
+      position: absolute;
+      width: 100px;
+      height: 50px;
+      padding: 12px 24px;
+      font-size: 18px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .yes-btn {
+      background-color: #4CAF50;
+      width: 100px;
+      height: 50px;
+      color: white;
+      left: 45%;
+      top: 60%;
+    }
+
+    .no-btn {
+      background-color: #f44336;
+      color: white;
+    }
+
+    .baby-image {
+      position: absolute;
+      max-width: 300px;
+      max-height: 300px;
+      border-radius: 15px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      opacity: 0;
+      transition: opacity 1s ease-in-out;
+      transform: translate(-50%, -50%);
+    }
+
+    .baby-image.show {
+      opacity: 1;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>Let's have a baby?</h1>
+  <button class="yes-btn">Yes</button>
+  <button class="no-btn" id="noBtn">No</button>
+
+  <div id="imageContainer"></div>
+
+  <script>
+    const noBtn = document.getElementById('noBtn');
+    const btnWidth = 100;
+    const btnHeight = 50;
+    const yesBtn = document.querySelector('.yes-btn');
+    const imageContainer = document.getElementById('imageContainer');
+    const h1 = document.querySelector('h1');
+
+    let btnX = window.innerWidth * 0.55;
+    let btnY = window.innerHeight * 0.6;
+    let mouseX = 0;
+    let mouseY = 0;
+
+    const margin = 10;
+
+    // Baby image URLs
+    const babyImages = [
+      'https://wl-brightside.cf.tsp.li/resize/728x/jpg/50e/5ca/43109053ae9ae409be5e36ff1c.jpg',
+      'https://images.unsplash.com/photo-1522771930-78848d9293e8?q=80&w=1935&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+      'https://images.unsplash.com/photo-1542385151-efd9000785a0?q=80&w=689&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+      'https://plus.unsplash.com/premium_photo-1667490647415-d2c05c51e49a?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+      'https://plus.unsplash.com/premium_photo-1661475916373-5aaaeb4a5393?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+      'https://images.unsplash.com/photo-1561525140-c2a4cc68e4bd?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+      'https://www.puterea.ro/wp-content/uploads/2025/03/Dani-Mocanu-si-a-primit-sentinta-aproape-6-ani-de-inchisoare.-Ce-acuzatii-grave-i-se-aduc.jpg',
+      'https://images.unsplash.com/photo-1602255680702-c47261041a97?q=80&w=688&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+      'https://plus.unsplash.com/premium_photo-1682094092071-1165565511c3?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+      'https://images.unsplash.com/photo-1547948577-438c80482068?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+      'https://images.unsplash.com/photo-1506456331400-7088248a8db1?q=80&w=1074&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+      'https://plus.unsplash.com/premium_photo-1664051271347-fd1ca4c45f8a?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+
+    ];
+
+    // Setup initial size & position
+    noBtn.style.width = btnWidth + 'px';
+    noBtn.style.height = btnHeight + 'px';
+    noBtn.style.left = btnX + 'px';
+    noBtn.style.top = btnY + 'px';
+
+    document.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+    });
+
+    function teleportButton() {
+      const maxX = window.innerWidth - btnWidth - margin;
+      const maxY = window.innerHeight - btnHeight - margin;
+
+      btnX = Math.random() * maxX + margin;
+      btnY = Math.random() * maxY + margin;
+
+      noBtn.style.left = btnX + 'px';
+      noBtn.style.top = btnY + 'px';
+    }
+
+    function animate() {
+      const rect = noBtn.getBoundingClientRect();
+      const btnCenterX = rect.left + rect.width / 2;
+      const btnCenterY = rect.top + rect.height / 2;
+
+      const dx = btnCenterX - mouseX;
+      const dy = btnCenterY - mouseY;
+      const dist = Math.hypot(dx, dy);
+
+      const influenceRadius = 200;
+      const teleportRadius = 40;
+
+      if (dist < teleportRadius) {
+        teleportButton();
+      } else if (dist < influenceRadius) {
+        const force = Math.pow((influenceRadius - dist) / influenceRadius, 2);
+        const angle = Math.atan2(dy, dx);
+        const moveX = Math.cos(angle) * force * 25;
+        const moveY = Math.sin(angle) * force * 25;
+
+        btnX += moveX;
+        btnY += moveY;
+      }
+
+      // Avoid edges
+      const maxX = window.innerWidth - btnWidth - margin;
+      const maxY = window.innerHeight - btnHeight - margin;
+
+      if (btnX < margin) btnX += 5;
+      if (btnX > maxX) btnX -= 5;
+      if (btnY < margin) btnY += 5;
+      if (btnY > maxY) btnY -= 5;
+
+      btnX = Math.max(margin, Math.min(btnX, maxX));
+      btnY = Math.max(margin, Math.min(btnY, maxY));
+
+      noBtn.style.left = btnX + 'px';
+      noBtn.style.top = btnY + 'px';
+
+      requestAnimationFrame(animate);
+    }
+
+    function showBabyImages() {
+      // Hide the buttons and question
+      yesBtn.classList.add('hidden');
+      noBtn.classList.add('hidden');
+      h1.classList.add('hidden');
+
+      // Create and show baby images one by one
+      babyImages.forEach((imgUrl, index) => {
+        setTimeout(() => {
+          const img = document.createElement('img');
+          img.src = imgUrl;
+          img.className = 'baby-image';
+          
+          // Random position for each image
+          const left = 10 + Math.random() * 80;
+          const top = 10 + Math.random() * 80;
+          
+          img.style.left = `${left}%`;
+          img.style.top = `${top}%`;
+          img.style.zIndex = index;
+          
+          imageContainer.appendChild(img);
+          
+          // Trigger the fade-in effect
+          setTimeout(() => {
+            img.classList.add('show');
+          }, 100);
+          
+        }, index * 1000); // Show each image 1 second apart
+      });
+    }
+
+    yesBtn.addEventListener('click', showBabyImages);
+
+    animate();
+  </script>
+</body>
+</html>
