@@ -11,7 +11,15 @@
       height: 100%;
       overflow: hidden;
       font-family: Arial, sans-serif;
+      
+    }
+
+    body {
       background-color: lightpink;
+      background-image: url('https://64.media.tumblr.com/37d3b3a88cc5df51163139af5c596eee/b35a8d2997693d42-f3/s1280x1920/9d971ce0acb9d3e0dcecc83636954a27f5e4b8ca.jpg');
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size:cover;
     }
 
     h1 {
@@ -40,8 +48,11 @@
     }
 
     .no-btn {
+      position: absolute;
       background-color: #f44336;
       color: white;
+      left: 45%;
+      top: 40%;
     }
 
     .baby-image {
@@ -62,11 +73,20 @@
     .hidden {
       display: none;
     }
+    .title-box{
+      width: fit-content;
+      height: fit-content;
+      margin: auto;
+      background-color: lightpink;
+      color: white;
+      font-size: xx-large;
+    }
   </style>
 </head>
 <body>
-  <h1>Let's have a baby?</h1>
-  <img class='baby-image show' src='https://64.media.tumblr.com/37d3b3a88cc5df51163139af5c596eee/b35a8d2997693d42-f3/s1280x1920/9d971ce0acb9d3e0dcecc83636954a27f5e4b8ca.jpg'>
+  <div class="title-box">
+    <h1>Let's have a baby?</h1>
+  </div>
   <button class="yes-btn">Yes</button>
   <button class="no-btn" id="noBtn">No</button>
 
